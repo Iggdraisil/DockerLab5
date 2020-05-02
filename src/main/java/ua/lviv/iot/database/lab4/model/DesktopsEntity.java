@@ -1,7 +1,6 @@
 package ua.lviv.iot.database.lab4.model;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,10 +15,11 @@ public class DesktopsEntity {
     private String storage;
     private Integer price;
     private String type;
+    private Set<SoftwareEntity> desktopsHasSoftwareById;
     private Set<WorkspaceEntity> workspaceHasDesktopsById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }
@@ -116,6 +116,18 @@ public class DesktopsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, motherboardId, name, videoadapter, ram, storage, price, type);
+    }
+
+    @ManyToMany
+    @JoinTable(name = "desktops_has_software",
+            joinColumns = @JoinColumn(name = "desktops_id"),
+            inverseJoinColumns = @JoinColumn(name = "software_id"))
+    public Set<SoftwareEntity> getDesktopsHasSoftwareById() {
+        return desktopsHasSoftwareById;
+    }
+
+    public void setDesktopsHasSoftwareById(Set<SoftwareEntity> desktopsHasSoftwareById) {
+        this.desktopsHasSoftwareById = desktopsHasSoftwareById;
     }
 
     @ManyToMany(mappedBy = "workspaceHasDesktopsById")

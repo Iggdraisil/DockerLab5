@@ -4,16 +4,16 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 import ua.lviv.iot.database.lab4.model.DesktopsEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class DesktopsDTO extends ResourceSupport {
     DesktopsEntity desktop;
+
     public DesktopsDTO(DesktopsEntity desktop, Link selfLink) {
         this.desktop=desktop;
         add(selfLink);
     }
-
     public Integer getDesktopId() {
         return desktop.getId();
     }
@@ -23,7 +23,7 @@ public class DesktopsDTO extends ResourceSupport {
     }
 
 
-    public String getDesktopName() {
+    public String getName() {
         return desktop.getName();
     }
 
@@ -41,7 +41,7 @@ public class DesktopsDTO extends ResourceSupport {
     }
 
 
-    public Integer getPrice() {
+    public Integer getDesktopPrice() {
         return desktop.getPrice();
     }
 
@@ -49,5 +49,4 @@ public class DesktopsDTO extends ResourceSupport {
     public String getType() {
         return desktop.getType();
     }
-
 }

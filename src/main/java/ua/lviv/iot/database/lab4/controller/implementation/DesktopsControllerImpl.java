@@ -28,11 +28,13 @@ public class DesktopsControllerImpl implements DesktopsController {
     DesktopsService desktopsService;
 
     @Override
-    @PostMapping(value = "api/desktops")
-    public ResponseEntity<DesktopsDTO> create(@RequestBody DesktopsEntity entity) throws SQLException, NoSuchDesktopsException {
+    @PostMapping("api/desktops")
+    public ResponseEntity<DesktopsDTO> create(@RequestBody DesktopsEntity entity) {
+        entity.setId(0);
         desktopsService.create(entity);
-        var link = linkTo(methodOn(DesktopsControllerImpl.class).find(entity.getId())).withSelfRel();
-        var desktopsDTO = new DesktopsDTO(entity, link);
+        var link = linkTo(methodOn(DesktopsControllerImpl.class).create(entity)).withSelfRel();
+        var desktops = desktopsService.findAll();
+        var desktopsDTO = new DesktopsDTO(desktops.get(desktops.size() - 1), link);
         return new ResponseEntity<>(desktopsDTO, HttpStatus.OK);
 
     }
@@ -42,7 +44,7 @@ public class DesktopsControllerImpl implements DesktopsController {
     public ResponseEntity<DesktopsDTO> update(@PathVariable Integer id, @RequestBody DesktopsEntity desktop) throws SQLException, NoSuchDesktopsException {
        desktopsService.update(desktop, id);
        var desktopp = desktopsService.findById(id);
-       var link = linkTo(methodOn(DesktopsControllerImpl.class).find(id)).withSelfRel();
+       var link = linkTo(methodOn(DesktopsControllerImpl.class).update(id, desktop)).withSelfRel();
        var desktopsDTO = new DesktopsDTO(desktopp, link);
        return new ResponseEntity<>(desktopsDTO, HttpStatus.OK);
     }
@@ -77,7 +79,7 @@ public class DesktopsControllerImpl implements DesktopsController {
 
     @GetMapping(value = "api/desktops/workspace/{id}")
     public ResponseEntity<List<DesktopsDTO>> getDesktopsByWorkspace(@PathVariable Integer id) throws SQLException, NoSuchWorkspaceException {
-        var desktops = desktopsService.getDesktopsByWorkspaceId(id);
+        Set<DesktopsEntity> desktops = desktopsService.getDesktopsByWorkspaceId(id);
         var link = linkTo(methodOn(DesktopsControllerImpl.class).getDesktopsByWorkspace(id)).withSelfRel();
 
         List<DesktopsDTO> desktopDTOs = new ArrayList<>();
@@ -85,5 +87,6 @@ public class DesktopsControllerImpl implements DesktopsController {
                 desktopDTOs.add( new DesktopsDTO(desktopsEntity, new Link(link.getHref() + "/" + desktopsEntity.getId()).withSelfRel())));
         return new ResponseEntity<>(desktopDTOs, HttpStatus.OK);
     }
+
 
 }

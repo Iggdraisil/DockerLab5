@@ -1,9 +1,8 @@
 package ua.lviv.iot.database.lab4.model;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "workspace")
@@ -12,6 +11,11 @@ public class WorkspaceEntity {
     private Integer worker;
     private String ip;
     private Integer officeId;
+    private Set<PrintersEntity> printersById;
+
+    private WorkersEntity workersByWorkersId;
+    private RoutersEntity router;
+
     private Set<DesktopsEntity> workspaceHasDesktopsById;
     private Set<MonitorsEntity> workspaceHasMonitorsById;
 
@@ -69,6 +73,39 @@ public class WorkspaceEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, worker, ip, officeId);
+    }
+
+    @ManyToMany
+    @JoinTable(name = "printers_has_workspace",
+            joinColumns = @JoinColumn(name = "workspace_id"),
+            inverseJoinColumns = @JoinColumn(name = "printers_id"))
+    public Set<PrintersEntity> getPrintersById() {
+        return printersById;
+    }
+
+    public void setPrintersById(Set<PrintersEntity> printersById) {
+        this.printersById = printersById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "workers_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public WorkersEntity getWorkersByWorkersId() {
+        return workersByWorkersId;
+    }
+
+    public void setWorkersByWorkersId(WorkersEntity workersByWorkersId) {
+        this.workersByWorkersId = workersByWorkersId;
+    }
+
+    @ManyToOne
+    @JoinColumns({@JoinColumn(name = "routers_ip", referencedColumnName = "ip", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "routers_office_id", referencedColumnName = "office_id", nullable = false, insertable = false, updatable = false)})
+    public RoutersEntity getRouters() {
+        return router;
+    }
+
+    public void setRouters(RoutersEntity routers) {
+        this.router = routers;
     }
 
     @ManyToMany

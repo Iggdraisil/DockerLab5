@@ -5,12 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.lviv.iot.database.lab4.exceptions.ExistsWorkspaceForWorkspaceException;
 import ua.lviv.iot.database.lab4.exceptions.NoSuchWorkspaceException;
+import ua.lviv.iot.database.lab4.exceptions.NoSuchWorkspaceException;
+import ua.lviv.iot.database.lab4.model.DesktopsEntity;
+import ua.lviv.iot.database.lab4.model.WorkspaceEntity;
 import ua.lviv.iot.database.lab4.model.WorkspaceEntity;
 import ua.lviv.iot.database.lab4.repository.DesktopsRepository;
 import ua.lviv.iot.database.lab4.repository.MonitorsRepository;
 import ua.lviv.iot.database.lab4.repository.WorkspaceRepository;
+import ua.lviv.iot.database.lab4.repository.WorkspaceRepository;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +26,7 @@ public class WorkspaceService {
 
     @Autowired
     DesktopsRepository desktopsRepository;
-    
+
     @Autowired
     MonitorsRepository monitorsRepository;
 
@@ -63,6 +68,7 @@ public class WorkspaceService {
         //update
         workspace.setIp(uWorkspace.getIp());
         workspace.setOfficeId(uWorkspace.getOfficeId());
+        workspace.setRouters(uWorkspace.getRouters());
         workspace.setWorker(uWorkspace.getWorker());
     }
 
@@ -72,8 +78,8 @@ public class WorkspaceService {
         var workspace = workspaceRepository.findById(workspace_id).get();//2.0.0.M7
 
         if (workspace == null) throw new NoSuchWorkspaceException();
-//        if (workspace.getWorkspaceHasDesktopsById().size() != 0) throw new ExistsWorkspaceForWorkspaceException();
-//        if (workspace.getWorkspaceHasMonitorsById().size() != 0) throw new ExistsWorkspaceForWorkspaceException();
+        if (workspace.getWorkspaceHasDesktopsById().size() != 0) throw new ExistsWorkspaceForWorkspaceException();
+        if (workspace.getWorkspaceHasMonitorsById().size() != 0) throw new ExistsWorkspaceForWorkspaceException();
         workspaceRepository.delete(workspace);
     }
 }

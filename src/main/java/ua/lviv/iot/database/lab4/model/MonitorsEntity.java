@@ -1,6 +1,8 @@
 package ua.lviv.iot.database.lab4.model;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,6 +14,8 @@ public class MonitorsEntity {
     private Integer srgbCoverage;
     private String matrixType;
     private String price;
+
+
     private Set<WorkspaceEntity> workspaceHasMonitorsById;
 
     public MonitorsEntity() {
