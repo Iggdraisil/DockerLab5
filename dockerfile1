@@ -1,0 +1,10 @@
+FROM mysql:8
+VOLUME /mysql
+
+ARG SH_FILE=install_db.sh
+ARG SQL_FILE=src/main/resources/lab3.sql
+ENV MYSQL_ALLOW_EMPTY_PASSWORD=True
+EXPOSE 3036
+COPY ${SH_FILE} /docker-entrypoint-initdb.d/
+COPY ${SQL_FILE} /tmp/lab3.sql
+
